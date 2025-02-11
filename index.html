@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch My Love - For Jaabi 💖</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #ff758c, #ff7eb3);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 80vh;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -50px; }
+            100% { top: 100vh; }
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        #love-message {
+            font-size: 24px;
+            font-weight: bold;
+            display: none;
+            margin-top: 20px;
+            color: #ffeedd;
+            animation: fadein 2s ease-in-out;
+        }
+        @keyframes fadein {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .hidden-gif {
+            display: none;
+            width: 100px;
+            height: 100px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Catch My Love, Jaabi! 💖</h1>
+    <p id="score">Score: 0</p>
+    <div id="game-container"></div>
+    <p id="love-message">💌 "Jaabi, you caught all my love! 💖 You're my everything!" 💌</p>
+    <img id="surprise-gif" class="hidden-gif" src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Surprise Love GIF">
+
+    <script>
+        let score = 0;
+        const gameContainer = document.getElementById("game-container");
+        const scoreDisplay = document.getElementById("score");
+        const loveMessage = document.getElementById("love-message");
+        const surpriseGif = document.getElementById("surprise-gif");
+
+        function createHeart() {
+            const heart = document.createElement("img");
+            heart.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Red_Heart.svg/768px-Red_Heart.svg.png"; // Heart Image
+            heart.classList.add("heart");
+            heart.style.left = Math.random() * (window.innerWidth - 50) + "px";
+
+            heart.addEventListener("click", function () {
+                score++;
+                scoreDisplay.textContent = "Score: " + score;
+                heart.remove();
+
+                // Surprise GIF appears randomly
+                if (Math.random() < 0.2) { 
+                    surpriseGif.style.display = "block";
+                    setTimeout(() => { surpriseGif.style.display = "none"; }, 3000);
+                }
+
+                // Winning condition
+                if (score >= 10) {
+                    loveMessage.style.display = "block";
+                }
+            });
+
+            gameContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        setInterval(createHeart, 800); // Generate a new heart every 800ms
+    </script>
+
+</body>
+</html>
