@@ -31,7 +31,7 @@
         }
         @keyframes fall {
             0% { top: -50px; }
-            100% { top: 80vh; } /* Adjusted to the container's visible height */
+            100% { top: 80vh; }
         }
         #score {
             font-size: 24px;
@@ -47,14 +47,33 @@
             animation: fadein 2s ease-in-out;
         }
         @keyframes fadein {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
         }
-        .hidden-gif {
+        .gif {
+            position: absolute;
+            width: 80px;
+            height: 80px;
             display: none;
-            width: 100px;
-            height: 100px;
-            margin-top: 10px;
+        }
+        .pop {
+            animation: pop 0.5s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .score-popup {
+            position: absolute;
+            font-size: 20px;
+            color: yellow;
+            font-weight: bold;
+            opacity: 1;
+            animation: popup 1s ease-out;
+        }
+        @keyframes popup {
+            0% { transform: translateY(0px); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
         }
     </style>
 </head>
@@ -64,48 +83,69 @@
     <p id="score">Score: 0</p>
     <div id="game-container"></div>
     <p id="love-message">💌 "Jaabi, you caught all my love! 💖 You're my everything!" 💌</p>
-    <img id="surprise-gif" class="hidden-gif" src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Surprise Love GIF">
 
     <script>
         let score = 0;
         const gameContainer = document.getElementById("game-container");
         const scoreDisplay = document.getElementById("score");
         const loveMessage = document.getElementById("love-message");
-        const surpriseGif = document.getElementById("surprise-gif");
 
         function createHeart() {
             const heart = document.createElement("img");
             heart.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Red_Heart.svg/768px-Red_Heart.svg.png"; // Heart Image
             heart.classList.add("heart");
-            heart.style.left = Math.random() * (gameContainer.offsetWidth - 50) + "px";  // Adjusted to fall within the game container's width
+            heart.style.left = Math.random() * (gameContainer.offsetWidth - 50) + "px"; 
 
-            heart.addEventListener("click", function () {
+            heart.addEventListener("click", function (event) {
                 score++;
                 scoreDisplay.textContent = "Score: " + score;
-                heart.remove();
-
-                // Surprise GIF appears randomly
-                if (Math.random() < 0.2) { 
-                    surpriseGif.style.display = "block";
-                    setTimeout(() => { surpriseGif.style.display = "none"; }, 3000);
+                heart.classList.add("pop");
+                
+                // Show score popup near the heart
+                showScorePopup(event.clientX, event.clientY);
+                
+                // Surprise GIF appears randomly near the clicked heart
+                if (Math.random() < 0.3) { 
+                    showGif(event.clientX, event.clientY);
                 }
 
                 // Winning condition
                 if (score >= 10) {
                     loveMessage.style.display = "block";
-                    // Stop further hearts from falling after winning
                     clearInterval(heartCreationInterval);
                 }
+
+                setTimeout(() => heart.remove(), 500);
             });
 
             gameContainer.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 3000);
+            setTimeout(() => { heart.remove(); }, 3000);
         }
 
-        const heartCreationInterval = setInterval(createHeart, 800); // Generate a new heart every 800ms
+        function showGif(x, y) {
+            const gif = document.createElement("img");
+            gif.src = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"; 
+            gif.classList.add("gif");
+            gif.style.left = x - 40 + "px";  // Adjust position for better alignment
+            gif.style.top = y - 40 + "px";
+            gameContainer.appendChild(gif);
+
+            gif.style.display = "block";
+            setTimeout(() => gif.remove(), 3000);
+        }
+
+        function showScorePopup(x, y) {
+            const scorePopup = document.createElement("div");
+            scorePopup.classList.add("score-popup");
+            scorePopup.textContent = "+1";
+            scorePopup.style.left = x + "px";
+            scorePopup.style.top = y + "px";
+            gameContainer.appendChild(scorePopup);
+
+            setTimeout(() => scorePopup.remove(), 1000);
+        }
+
+        const heartCreationInterval = setInterval(createHeart, 800);
     </script>
 
 </body>
