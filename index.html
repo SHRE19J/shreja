@@ -24,8 +24,7 @@
         }
         .heart {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            font-size: 40px;
             cursor: pointer;
             animation: fall 3s linear forwards;
         }
@@ -50,14 +49,11 @@
             0% { opacity: 0; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
         }
-        .gif {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            display: none;
-        }
         .pop {
-            animation: pop 0.5s ease-out;
+            position: absolute;
+            font-size: 40px;
+            opacity: 1;
+            animation: pop 1s ease-out;
         }
         @keyframes pop {
             0% { transform: scale(1); opacity: 1; }
@@ -91,8 +87,8 @@
         const loveMessage = document.getElementById("love-message");
 
         function createHeart() {
-            const heart = document.createElement("img");
-            heart.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Red_Heart.svg/768px-Red_Heart.svg.png"; // Heart Image
+            const heart = document.createElement("div");
+            heart.innerHTML = "💖"; // Heart emoji instead of image
             heart.classList.add("heart");
             heart.style.left = Math.random() * (gameContainer.offsetWidth - 50) + "px"; 
 
@@ -104,10 +100,8 @@
                 // Show score popup near the heart
                 showScorePopup(event.clientX, event.clientY);
                 
-                // Surprise GIF appears randomly near the clicked heart
-                if (Math.random() < 0.3) { 
-                    showGif(event.clientX, event.clientY);
-                }
+                // Show heart emoji effect at clicked position
+                showHeartEffect(event.clientX, event.clientY);
 
                 // Winning condition
                 if (score >= 10) {
@@ -122,16 +116,14 @@
             setTimeout(() => { heart.remove(); }, 3000);
         }
 
-        function showGif(x, y) {
-            const gif = document.createElement("img");
-            gif.src = "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"; 
-            gif.classList.add("gif");
-            gif.style.left = x - 40 + "px";  // Adjust position for better alignment
-            gif.style.top = y - 40 + "px";
-            gameContainer.appendChild(gif);
-
-            gif.style.display = "block";
-            setTimeout(() => gif.remove(), 3000);
+        function showHeartEffect(x, y) {
+            const popHeart = document.createElement("div");
+            popHeart.innerHTML = "❤️"; // Floating heart effect
+            popHeart.classList.add("pop");
+            popHeart.style.left = x - 20 + "px";  
+            popHeart.style.top = y - 20 + "px";
+            gameContainer.appendChild(popHeart);
+            setTimeout(() => popHeart.remove(), 1000);
         }
 
         function showScorePopup(x, y) {
@@ -141,7 +133,6 @@
             scorePopup.style.left = x + "px";
             scorePopup.style.top = y + "px";
             gameContainer.appendChild(scorePopup);
-
             setTimeout(() => scorePopup.remove(), 1000);
         }
 
